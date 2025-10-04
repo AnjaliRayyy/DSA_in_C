@@ -33,9 +33,11 @@ void enqueue(struct Node** head,struct Node** rear,int data)
 int dequeue(struct Node** head,struct Node** rear)
 {
     if(isEmpty(*head))  return -1;
-    int val=(*head)->data;
+    struct Node* temp=*head;
+    int val=temp->data;
     if(*head==*rear)  *head=*rear=NULL;
     else *head=(*head)->next;
+    free(temp);
     return val;
 }
 int peek(struct Node* head)
