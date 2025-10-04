@@ -1,69 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-struct Queue{
+struct cirQueue{
     int* arr;
     int capacity;
     int front;
     int rear;
 };
-bool isFull(struct Queue* q)
+bool isFull(struct cirQueue* q)
 {
-    //printf("Capacity =%d, Rear= %d\n",q->capacity,q->rear);
-    if(q->rear==q->capacity-1)  return true;
+    if((q->rear+1)%q->capacity == q->front) return true;
     else    return false;
 }
-bool isEmpty(struct Queue* q)
+bool isEmpty(struct cirQueue* q)
 {
-    if(q->front==-1)    return true;
+    if(q->front == -1)  return true;
     else    return false;
 }
-void enqueue(struct Queue* q,int val)
+void enqueue(struct cirQueue* q,int data)
 {
-    if(isFull(q))
-    {
-        printf("Queue Overflow!\n");
-    }
+    if(isFull(q))   printf("Queue Overflow!\n");
     else
     {
-        if(q->front==-1)    q->front=0;
-        q->rear=q->rear+1;
-        q->arr[q->rear]=val;
+        if(isEmpty(q))  q->front=0;
+        q->rear=(q->rear+1)%q->capacity;
+        q->arr[q->rear]=data;
     }
 }
-int dequeue(struct Queue* q)
+int dequeue(struct cirQueue* q)
 {
     if(isEmpty(q))  return -1;
     int val=q->arr[q->front];
-    if(q->front == q->rear)
-    {
-        q->front=-1;
-        q->rear=-1;
-    }
-    else
-    {
-        q->front=q->front+1;    
-    }
+    if(q->rear==q->front)   q->rear=q->front=-1;
+    else    q->front=(q->front+1)%q->capacity;
     return val;
-}
-int peek(struct Queue* q)
+} 
+int peek(struct cirQueue* q)
 {
     if(isEmpty(q))  return -1;
-    else    return q->arr[q->front];
+    else    return q->arr[q->front]; 
 }
-void display(struct Queue* q)
+void display(struct cirQueue* q)
 {
-    if(isEmpty(q))  printf("Queue is Empty");
+    if(isEmpty(q))  printf("Nothing to display, Queue is Empty\n");
     else
     {
-        for(int i=q->front;i<=q->rear;i++)
-        printf("%d ",q->arr[i]);
+        int i;
+        for(i=q->front;i!=q->rear;)
+        {
+            printf("%d ",q->arr[i]);
+            i=(i+1)%q->capacity;
+        }
+        printf("%d\n",q->arr[i]);
     }
-    printf("\n");
 }
 void main()
 {
-    struct Queue* q=(struct Queue*)malloc(sizeof(struct Queue));
+     struct cirQueue* q=(struct cirQueue*)malloc(sizeof(struct cirQueue));
     printf("Enter the capacity of the queue : ");
     scanf("%d",&q->capacity);
     q->arr=(int*)malloc(q->capacity*sizeof(int));
