@@ -27,20 +27,17 @@ int dequeue(struct Node** front,struct Node** rear)
     if(isEmpty(*front))  return -1;
 
     int val;
+    struct Node* temp=*front;
     if(*front==*rear){
-        printf("Entered equals condition Front==Rear\n");
-        val=(*front)->data;
         *front=*rear=NULL;
-        return val;
     }
     else{
-        struct Node* temp=*front;
         *front=temp->next;
         (*rear)->next=temp->next;
+    }
         val=temp->data;
         free(temp);
         return val;
-    }
 }
 int peek(struct Node* front)
 {
@@ -77,12 +74,10 @@ void main()
             case 1: printf("Enter the value to be inserted to the queue : ");
                     scanf("%d",&val);
                     enqueue(&front,&rear,val);
-                    printf("FRONT = %d ; REAR= %d\n",front,rear);
                     break;
             case 2: val=dequeue(&front,&rear);
                     if(val==-1) printf("Queue Underflow!\n");
                     else printf("Dequeued value = %d\n",val);
-                    printf("FRONT = %d ; REAR= %d\n",front,rear);
                     break;
             case 3: val=peek(front);
                     if(val==-1) printf("Queue is empty\n");
